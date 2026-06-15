@@ -1,4 +1,4 @@
-﻿namespace Image
+namespace Image
 {
     partial class AddPath
     {
@@ -111,7 +111,7 @@
             Controls.Add(btn_save);
             Font = new Font("Microsoft YaHei UI", 12F);
             ForeColor = Color.Black;
-            Icon = (Icon)resources.GetObject("$this.Icon");
+            Icon = Properties.Resources.favicon;
             MinimumSize = new Size(500, 146);
             Name = "AddPath";
             StartPosition = FormStartPosition.CenterParent;
@@ -121,6 +121,7 @@
         }
 
         #endregion
+
         private AntdUI.PageHeader winBar;
         private AntdUI.Button btn_save;
         private AntdUI.Input txt_path;

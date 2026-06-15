@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
 namespace TSkin
 {
@@ -67,7 +67,7 @@ namespace TSkin
 
         #endregion
 
-        StringFormat _StringFormat = new StringFormat { LineAlignment = StringAlignment.Center, Trimming = StringTrimming.EllipsisCharacter, FormatFlags = StringFormatFlags.NoWrap };
+        AntdUI.FormatFlags _StringFormat = AntdUI.FormatFlags.Left | AntdUI.FormatFlags.VerticalCenter | AntdUI.FormatFlags.NoWrapEllipsis;
         protected override void OnPaint(PaintEventArgs e)
         {
             var g = AntdUI.Helper.High(e.Graphics);

@@ -1,4 +1,4 @@
-﻿namespace Image
+namespace Image
 {
     partial class Main
     {
@@ -167,7 +167,7 @@
             Controls.Add(panel_top);
             Font = new Font("Microsoft YaHei UI", 12F);
             ForeColor = Color.Black;
-            Icon = (Icon)resources.GetObject("$this.Icon");
+            Icon = Properties.Resources.favicon;
             MinimumSize = new Size(648, 380);
             Name = "Main";
             StartPosition = FormStartPosition.CenterScreen;
@@ -179,6 +179,7 @@
         }
 
         #endregion
+
         private AntdUI.Button btn_install;
         private AntdUI.Button btn_uninstall;
         private AntdUI.Button btn_start;

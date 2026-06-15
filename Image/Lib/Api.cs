@@ -1,4 +1,4 @@
-﻿namespace Image
+namespace Image
 {
     public static class Api
     {

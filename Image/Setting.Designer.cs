@@ -1,4 +1,4 @@
-﻿namespace Image
+namespace Image
 {
     partial class Setting
     {
@@ -146,7 +146,7 @@
             Controls.Add(label3);
             Font = new Font("Microsoft YaHei UI", 12F);
             ForeColor = Color.Black;
-            Icon = (Icon)resources.GetObject("$this.Icon");
+            Icon = Properties.Resources.favicon;
             MinimumSize = new Size(356, 220);
             Name = "Setting";
             StartPosition = FormStartPosition.CenterParent;
@@ -156,6 +156,7 @@
         }
 
         #endregion
+
         private AntdUI.PageHeader winBar;
         private AntdUI.Button btn_save;
         private Label label1;

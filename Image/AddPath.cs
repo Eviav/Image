@@ -26,11 +26,11 @@ namespace Image
                 bool isok = false;
                 Task.Run(() =>
                 {
-                    var drive = System.IO.DriveInfo.GetDrives().ToList().Find(a => a.Name == dirinfo.Root.Name);
+                    var drive = DriveInfo.GetDrives().ToList().Find(a => a.Name == dirinfo.Root.Name);
                     if (drive != null)
                     {
-                        if (drive.TotalFreeSpace > 1073741824) isok = true; //´óÓÚ1G
-                        label1.Text = $"×Ü {drive.TotalSize.ByteUnit()} | ÒÑÊ¹ÓÃ {(drive.TotalSize - drive.TotalFreeSpace).ByteUnit()} | Ê£Óà {drive.TotalFreeSpace.ByteUnit()}";
+                        if (drive.TotalFreeSpace > 1073741824) isok = true; //å¤§äºŽ1G
+                        label1.Text = $"æ€» {drive.TotalSize.ByteUnit()} | å·²ä½¿ç”¨ {(drive.TotalSize - drive.TotalFreeSpace).ByteUnit()} | å‰©ä½™ {drive.TotalFreeSpace.ByteUnit()}";
                     }
                 }).ContinueWith((action =>
                 {
@@ -41,7 +41,7 @@ namespace Image
 
         private void btn_open_Click(object sender, EventArgs e)
         {
-            using (var dialog = new FolderBrowserDialog { Description = "Ñ¡Ôñ¹ÒÔØÂ·¾¶", InitialDirectory = txt_path.Text, UseDescriptionForTitle = true })
+            using (var dialog = new FolderBrowserDialog { Description = "é€‰æ‹©æŒ‚è½½è·¯å¾„", InitialDirectory = txt_path.Text, UseDescriptionForTitle = true })
             {
                 if (dialog.ShowDialog() == DialogResult.OK) txt_path.Text = dialog.SelectedPath;
             }

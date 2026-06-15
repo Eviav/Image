@@ -1,8 +1,8 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Image
 {
-    [JsonSourceGenerationOptions(WriteIndented = true)]
+    [JsonSourceGenerationOptions(WriteIndented = false)]
     [JsonSerializable(typeof(HttpBase))]
     [JsonSerializable(typeof(HttpPaths))]
     [JsonSerializable(typeof(HttpData))]

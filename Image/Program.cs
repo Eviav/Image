@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using System.ServiceProcess;
 
 namespace Image
@@ -17,7 +16,6 @@ namespace Image
         [STAThread]
         static void Main(string[] arge)
         {
-            ComWrappers.RegisterForMarshalling(WinFormsComInterop.WinFormsComWrappers.Instance);
             if (arge.Length > 0)
             {
                 string argeline = string.Join(" ", arge);

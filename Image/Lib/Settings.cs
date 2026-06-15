@@ -1,4 +1,4 @@
-﻿namespace Image
+namespace Image
 {
     /// <summary>
     /// 系统设置。保存用户设置的数据。

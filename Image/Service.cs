@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -23,26 +23,10 @@ namespace Image
                 ContentRootPath = Program.BasePath,
                 EnvironmentName = Microsoft.Extensions.Hosting.Environments.Staging,
             });
-            builder.Services.ConfigureHttpJsonOptions(options =>
-            {
-                options.SerializerOptions.TypeInfoResolverChain.Insert(0, SGC.Default);
-            });
+            builder.Services.ConfigureHttpJsonOptions(options => options.SerializerOptions.TypeInfoResolverChain.Insert(0, SGC.Default));
+            builder.Services.AddCors(options => options.AddPolicy("CorsTom", policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-            bool https = false;
-            if (File.Exists(Program.BasePath + Settings.CertPem) && File.Exists(Program.BasePath + Settings.CertPemPass))
-            {
-                builder.Configuration["Kestrel:Certificates:Default:Path"] = Settings.CertPem;
-                builder.Configuration["Kestrel:Certificates:Default:KeyPath"] = Settings.CertPemPass;
-                https = true;
-            }
-            else if (File.Exists(Program.BasePath + Settings.CertPfx) && File.Exists(Program.BasePath + Settings.CertPfxPass))
-            {
-                builder.Configuration["Kestrel:Certificates:Default:Path"] = Settings.CertPfx;
-                builder.Configuration["Kestrel:Certificates:Default:Password"] = File.ReadAllText(Program.BasePath + Settings.CertPfxPass);
-                https = true;
-            }
-
-            builder.Services.AddCors();
+            bool https = EnableHttps(builder);
 
             #region 开放大文件上传
 
@@ -66,8 +50,7 @@ namespace Image
             app.Urls.Add("http://*:" + Settings.HttpPort);
             if (https) app.Urls.Add("https://*:" + Settings.HttpsPort);
             //app.UseStaticFiles();
-            app.UseCors("AllowAllOrigin");
-            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors("CorsTom");
 
             app.MapGet("/", () => "正常");
             app.MapGet("/info", () =>
@@ -75,8 +58,8 @@ namespace Image
                 var list = Settings.ImagePath;
                 if (list != null)
                 {
-                    var result = new List<HttpInfo>();
                     var drives = DriveInfo.GetDrives().ToList();
+                    var result = new List<HttpInfo>(drives.Count);
                     foreach (var item in list)
                     {
                         var drive = drives.Find(a => a.Name == item.root);
@@ -210,11 +193,31 @@ namespace Image
 
         protected override void OnStop()
         {
-            if (app != null)
+            app?.DisposeAsync();
+            app = null;
+        }
+
+        bool EnableHttps(WebApplicationBuilder builder)
+        {
+            if (File.Exists(Program.BasePath + Settings.CertPem) && File.Exists(Program.BasePath + Settings.CertPemPass))
             {
-                app.DisposeAsync();
-                app = null;
+                builder.Configuration["Kestrel:Certificates:Default:Path"] = Settings.CertPem;
+                builder.Configuration["Kestrel:Certificates:Default:KeyPath"] = Settings.CertPemPass;
+                return true;
             }
+            else if (File.Exists(Program.BasePath + Settings.CertPfx) && File.Exists(Program.BasePath + Settings.CertPfxPass))
+            {
+                builder.Configuration["Kestrel:Certificates:Default:Path"] = Settings.CertPfx;
+                builder.Configuration["Kestrel:Certificates:Default:Password"] = File.ReadAllText(Program.BasePath + Settings.CertPfxPass);
+                return true;
+            }
+            else if (File.Exists(Program.BasePath + "joyxu.net.pfx") && File.Exists(Program.BasePath + "keystorePass.txt"))
+            {
+                builder.Configuration["Kestrel:Certificates:Default:Path"] = "joyxu.net.pfx";
+                builder.Configuration["Kestrel:Certificates:Default:Password"] = File.ReadAllText(Program.BasePath + "keystorePass.txt");
+                return true;
+            }
+            return false;
         }
     }
 }

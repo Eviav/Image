@@ -318,18 +318,18 @@ namespace System.ServiceProcess
         {
             public short length = 0;
             public short maximumLength = 0;
-            public IntPtr pwstr = (IntPtr)0;
+            public IntPtr pwstr = 0;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class LSA_OBJECT_ATTRIBUTES
         {
             public int length = 0;
-            public IntPtr rootDirectory = (IntPtr)0;
-            public IntPtr pointerLsaString = (IntPtr)0;
+            public IntPtr rootDirectory = 0;
+            public IntPtr pointerLsaString = 0;
             public int attributes = 0;
-            public IntPtr pointerSecurityDescriptor = (IntPtr)0;
-            public IntPtr pointerSecurityQualityOfService = (IntPtr)0;
+            public IntPtr pointerSecurityDescriptor = 0;
+            public IntPtr pointerSecurityQualityOfService = 0;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -412,7 +412,5 @@ namespace System.ServiceProcess
 
         [DllImport(ExternDll.Advapi32, CharSet = System.Runtime.InteropServices.CharSet.Unicode, SetLastError = true)]
         public static extern bool ChangeServiceConfig2(IntPtr serviceHandle, uint infoLevel, ref SERVICE_DELAYED_AUTOSTART_INFO serviceDesc);
-
-
     }
 }

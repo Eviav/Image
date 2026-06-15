@@ -105,7 +105,7 @@ namespace System.Configuration.Install
         {
             if (value == _owner)
             {
-                throw new ArgumentException("安装程序无法添加到其自己的集合中");
+                throw new ArgumentException("瀹夎绋嬪簭鏃犳硶娣诲姞鍒板叾鑷繁鐨勯泦鍚堜腑");
             }
             var traceVerbose = CompModSwitches.InstallerDesign.TraceVerbose;
             ((Installer)value).parent = _owner;
@@ -128,7 +128,7 @@ namespace System.Configuration.Install
         {
             if (newValue == _owner)
             {
-                throw new ArgumentException("安装程序无法添加到其自己的集合中");
+                throw new ArgumentException("瀹夎绋嬪簭鏃犳硶娣诲姞鍒板叾鑷繁鐨勯泦鍚堜腑");
             }
             var traceVerbose = CompModSwitches.InstallerDesign.TraceVerbose;
             ((Installer)oldValue).parent = null;

@@ -1,4 +1,4 @@
-﻿namespace TSkin
+namespace TSkin
 {
     public class YScroll
     {
@@ -8,19 +8,13 @@
         /// <summary>
         /// 滚动条自身的区域
         /// </summary>
-        public Rectangle Bounds
-        {
-            get => bounds;
-        }
+        public Rectangle Bounds => bounds;
 
         Rectangle sliderBounds;
         /// <summary>
         /// 滑块区域
         /// </summary>
-        public Rectangle SliderBounds
-        {
-            get => sliderBounds;
-        }
+        public Rectangle SliderBounds => sliderBounds;
 
         #endregion
 
@@ -33,13 +27,11 @@
             get => virtualWidth;
             set
             {
-                if (virtualWidth != value)
-                {
-                    virtualWidth = value;
-                    bounds.X = value - 8;
-                    sliderBounds.Height = size;
-                    sliderBounds.Y = value - size;
-                }
+                if (virtualWidth == value) return;
+                virtualWidth = value;
+                bounds.X = value - 8;
+                sliderBounds.Height = size;
+                sliderBounds.Y = value - size;
             }
         }
 
@@ -49,7 +41,7 @@
         int virtualHeight = 0;
         public int VirtualHeight
         {
-            get { return virtualHeight; }
+            get => virtualHeight;
             set
             {
                 if (value <= ctrl.Height)
@@ -76,16 +68,14 @@
         /// </summary>
         public int Size
         {
-            get { return size; }
+            get => size;
             set
             {
-                if (size != value)
-                {
-                    size = value;
-                    sliderBounds.Height = value;
-                    sliderBounds.X = virtualWidth - value;
-                    ctrl.Invalidate();
-                }
+                if (size == value) return;
+                size = value;
+                sliderBounds.Height = value;
+                sliderBounds.X = virtualWidth - value;
+                ctrl.Invalidate();
             }
         }
 
@@ -95,7 +85,7 @@
         /// </summary>
         public int Value
         {
-            get { return _value; }
+            get => _value;
             set
             {
                 if (value < 0)
@@ -104,10 +94,8 @@
                     if (_value != 0)
                     {
                         _value = 0;
-                        if (IsDraw)
-                            ctrl.Invalidate();
-                        if (ScrollChange != null)
-                        { ScrollChange(0); }
+                        if (IsDraw) ctrl.Invalidate();
+                        ScrollChange?.Invoke(0);
                     }
                 }
                 else if (virtualHeight > 0 && value > virtualHeight - ctrl.Height)
@@ -119,18 +107,15 @@
                         {
                             _value = virtualHeight - ctrl.Height;
                             ctrl.Invalidate();
-                            if (ScrollChange != null)
-                            { ScrollChange(Math.Round((_value * 1.0) / ((virtualHeight - bounds.Height) * 1.0), 2)); }
+                            ScrollChange?.Invoke(Math.Round((_value * 1.0) / ((virtualHeight - bounds.Height) * 1.0), 2));
                         }
                     }
                 }
                 else if (_value != value)
                 {
                     _value = value;
-                    if (IsDraw)
-                        ctrl.Invalidate();
-                    if (ScrollChange != null)
-                    { ScrollChange(Math.Round((_value * 1.0) / ((virtualHeight - bounds.Height) * 1.0), 2)); }
+                    if (IsDraw) ctrl.Invalidate();
+                    ScrollChange?.Invoke(Math.Round((_value * 1.0) / ((virtualHeight - bounds.Height) * 1.0), 2));
                 }
             }
         }
@@ -141,13 +126,10 @@
         bool isMouseDown = false;
         public bool IsMouseDown
         {
-            get { return isMouseDown; }
+            get => isMouseDown;
             set
             {
-                if (value)
-                {
-                    m_nLastSliderY = sliderBounds.Y;
-                }
+                if (value) m_nLastSliderY = sliderBounds.Y;
                 isMouseDown = value;
             }
         }
@@ -158,14 +140,12 @@
         /// </summary>
         public bool IsMouseOnSlider
         {
-            get { return isMouseOnSlider; }
+            get => isMouseOnSlider;
             set
             {
-                if (isMouseOnSlider != value)
-                {
-                    isMouseOnSlider = value;
-                    ctrl.Invalidate(SliderBounds);
-                }
+                if (isMouseOnSlider == value) return;
+                isMouseOnSlider = value;
+                ctrl.Invalidate(SliderBounds);
             }
         }
 
@@ -188,15 +168,11 @@
         public void ClearAllMouseOn()
         {
             isMouseOnSlider = false;
-            ctrl.Invalidate(this.bounds);
+            ctrl.Invalidate(bounds);
         }
-        public void OnScrollChange(double value)
-        {
-            if (ScrollChange != null)
-            { ScrollChange(value); }
-        }
+        public void OnScrollChange(double value) => ScrollChange?.Invoke(value);
 
-        public event ScrollEventHandler ScrollChange;
+        public event ScrollEventHandler? ScrollChange;
         public delegate void ScrollEventHandler(double value);
 
         /// <summary>
@@ -205,12 +181,9 @@
         /// <param name="mouseY">当前鼠标坐标Y</param>
         public void MoveSliderToLocation(int mouseY)
         {
-            if (mouseY - sliderBounds.Height / 2 <= 0)
-                sliderBounds.Y = 0;
-            else if (mouseY + sliderBounds.Height / 2 > ctrl.Height)
-                sliderBounds.Y = ctrl.Height - sliderBounds.Height;
-            else
-                sliderBounds.Y = mouseY - sliderBounds.Height / 2;
+            if (mouseY - sliderBounds.Height / 2 <= 0) sliderBounds.Y = 0;
+            else if (mouseY + sliderBounds.Height / 2 > ctrl.Height) sliderBounds.Y = ctrl.Height - sliderBounds.Height;
+            else sliderBounds.Y = mouseY - sliderBounds.Height / 2;
             Value = (int)((sliderBounds.Y * 1.0) / (ctrl.Height - SliderBounds.Height) * (virtualHeight - ctrl.Height));
         }
         /// <summary>
@@ -220,23 +193,15 @@
         public void MoveSliderFromLocation(int mouseY)
         {
             //if (!this.IsMouseDown) return;
-            if (m_nLastSliderY + mouseY - MouseDownY <= 0)
-            {
-                sliderBounds.Y = 0;
-            }
+            if (m_nLastSliderY + mouseY - MouseDownY <= 0) sliderBounds.Y = 0;
             else if (m_nLastSliderY + mouseY - MouseDownY > ctrl.Height - SliderBounds.Height)
             {
-                if (sliderBounds.Y == ctrl.Height - sliderBounds.Height)
-                    return;
+                if (sliderBounds.Y == ctrl.Height - sliderBounds.Height) return;
                 sliderBounds.Y = ctrl.Height - sliderBounds.Height;
             }
-            else
-            {
-                sliderBounds.Y = m_nLastSliderY + mouseY - MouseDownY;
-            }
+            else sliderBounds.Y = m_nLastSliderY + mouseY - MouseDownY;
             Value = (int)((sliderBounds.Y * 1.0) / (ctrl.Height - SliderBounds.Height) * (virtualHeight - ctrl.Height));
         }
-
 
         #region 外观
 
@@ -253,18 +218,19 @@
         /// </summary>
         public void DrawScroll(AntdUI.Canvas g)
         {
-            if (!IsDraw)
-                return;
-            bounds.Height = ctrl.Height;
-            //计算滑块位置
-            sliderBounds.X = bounds.X;
-            sliderBounds.Height = (int)(((double)ctrl.Height / virtualHeight) * ctrl.Height);
-            if (sliderBounds.Height < 0) sliderBounds.Height = 10;
-            sliderBounds.Y = _value == 0 ? 0 : (int)(((double)_value / (virtualHeight - ctrl.Height)) * (ctrl.Height - sliderBounds.Height));
-
-            using (var path = AntdUI.Helper.RoundPath(sliderBounds, size))
+            if (IsDraw)
             {
-                g.Fill((isMouseDown || isMouseOnSlider) ? DownColor : DefaultColor, path);
+                bounds.Height = ctrl.Height;
+                //计算滑块位置
+                sliderBounds.X = bounds.X;
+                sliderBounds.Height = (int)(((double)ctrl.Height / virtualHeight) * ctrl.Height);
+                if (sliderBounds.Height < 0) sliderBounds.Height = 10;
+                sliderBounds.Y = _value == 0 ? 0 : (int)(((double)_value / (virtualHeight - ctrl.Height)) * (ctrl.Height - sliderBounds.Height));
+
+                using (var path = AntdUI.Helper.RoundPath(sliderBounds, size))
+                {
+                    g.Fill((isMouseDown || isMouseOnSlider) ? DownColor : DefaultColor, path);
+                }
             }
         }
 
